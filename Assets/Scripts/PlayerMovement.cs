@@ -1,13 +1,19 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
     public Animator anim;
     public float moveSpeed = 5f;
-    public GameObject loseUI;
     public GameObject winUI;
     private Vector2 input;
     private bool moving;
+    public GameObject restartButton;
+
+    void Start()
+    {
+        Time.timeScale = 1f;
+    }
 
     void Update()
     {
@@ -44,7 +50,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void LoseGame()
     {
-        loseUI.SetActive(true);
         Time.timeScale = 0f;
     }
 
@@ -52,5 +57,12 @@ public class PlayerMovement : MonoBehaviour
     {
         winUI.SetActive(true);
         Time.timeScale = 0f;
+        restartButton.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene( SceneManager.GetActiveScene().buildIndex);
     }
 }
