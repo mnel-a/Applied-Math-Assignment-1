@@ -21,16 +21,13 @@ public class Turret1 : MonoBehaviour
         if (target == null)
             return;
 
-        Vector2 directionToTarget =
-            (target.position - transform.position).normalized;
+        Vector2 directionToTarget = (target.position - transform.position).normalized;
 
         Vector2 forward = transform.right;
 
-        float distance =
-            Vector2.Distance(transform.position, target.position);
+        float distance = Vector2.Distance(transform.position, target.position);
 
-        float angle =
-            Vector2.Angle(forward, directionToTarget);
+        float angle = Vector2.Angle(forward, directionToTarget);
 
         if (angle <= coneAngle * 0.5f && distance <= detectRange)
         {
@@ -45,11 +42,9 @@ public class Turret1 : MonoBehaviour
 
     void Shoot()
     {
-        Vector2 direction =
-            (target.position - firePoint.position).normalized;
+        Vector2 direction = (target.position - firePoint.position).normalized;
 
-        float angleStep =
-            numberFire > 1 ? spreadAngle / (numberFire - 1) : 0f;
+        float angleStep = numberFire > 1 ? spreadAngle / (numberFire - 1) : 0f;
 
         float currentAngle = -spreadAngle * 0.5f;
 

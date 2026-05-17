@@ -50,22 +50,16 @@ IEnumerator ShootRoutine()
 {
     if (flashPrefab != null)
     {
-        GameObject flash = Instantiate(
-            flashPrefab,
-            gunPoint.position,
-            transform.rotation
-        );
+        GameObject flash = Instantiate(flashPrefab, gunPoint.position, transform.rotation);
 
         Destroy(flash, flashDuration);
     }
 
     yield return new WaitForSeconds(shootDelay);
 
-    Vector2 direction =
-        (target.position - gunPoint.position).normalized;
+    Vector2 direction = (target.position - gunPoint.position).normalized;
 
-    float angleStep =
-        numberGun > 1 ? spreadAngle / (numberGun - 1) : 0f;
+    float angleStep = numberGun > 1 ? spreadAngle / (numberGun - 1) : 0f;
 
     float currentAngle = -spreadAngle * 0.5f;
 
