@@ -19,15 +19,13 @@ public class Turret2 : MonoBehaviour
         if (target == null)
             return;
 
-        Vector2 directionToTarget =
-            (target.position - transform.position).normalized;
+        Vector2 directionToTarget = (target.position - transform.position).normalized;
 
         Vector2 forward = transform.right;
 
         float dot = Vector2.Dot(forward, directionToTarget);
 
-        float distance =
-            Vector2.Distance(transform.position, target.position);
+        float distance = Vector2.Distance(transform.position, target.position);
 
         if (dot > 0.98f && distance <= detectSnipeRange)
         {
@@ -41,14 +39,9 @@ public class Turret2 : MonoBehaviour
 
     void Shoot()
     {
-        Vector2 direction =
-            (target.position - snipePoint.position).normalized;
+        Vector2 direction = (target.position - snipePoint.position).normalized;
 
-        GameObject bullet = Instantiate(
-            snipePrefab,
-            snipePoint.position,
-            Quaternion.identity
-        );
+        GameObject bullet = Instantiate(snipePrefab, snipePoint.position, Quaternion.identity);
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
 
