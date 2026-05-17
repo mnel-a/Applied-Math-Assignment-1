@@ -316,7 +316,7 @@ Camera:
   far clip plane: 1000
   field of view: 1
   orthographic: 1
-  orthographic size: 8
+  orthographic size: 9.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -461,6 +461,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1813eeaa96703c418ef94e91b16ef92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Finish
+  winDistance: 1
 --- !u!212 &689438628
 SpriteRenderer:
   serializedVersion: 2
@@ -718,8 +719,10 @@ MonoBehaviour:
   rotateSpeed: 100
   gunPrefab: {fileID: 2375526350010424805, guid: c1ed9e117fbaf7d45b2545e19fc024ed, type: 3}
   gunPoint: {fileID: 696123316}
-  gunSpeed: 5
+  gunSpeed: 6
   gunRate: 0.7
+  numberGun: 4
+  spreadAngle: 15
   flashPrefab: {fileID: 6234416739829541955, guid: 7ae99f145a8140a49bbe8029aeff242f, type: 3}
   flashDuration: 0.3
   shootDelay: 0.1
@@ -6832,10 +6835,10 @@ MonoBehaviour:
   firePoint: {fileID: 993488255}
   fireSpeed: 3
   fireRate: 1
-  numberFire: 3
+  numberFire: 4
   spreadAngle: 45
   coneAngle: 45
-  coneColor: {r: 1, g: 0, b: 0, a: 0.78431374}
+  coneColor: {r: 1, g: 0, b: 0, a: 0.5882353}
 --- !u!1 &1029520603
 GameObject:
   m_ObjectHideFlags: 0
@@ -6866,6 +6869,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1813eeaa96703c418ef94e91b16ef92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Finish
+  winDistance: 1
 --- !u!212 &1029520605
 SpriteRenderer:
   serializedVersion: 2
@@ -7143,8 +7147,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   anim: {fileID: 1615393726}
   moveSpeed: 5
-  Lose: {fileID: 204288103}
-  Win: {fileID: 1119144847}
+  loseUI: {fileID: 204288103}
+  winUI: {fileID: 1119144847}
 --- !u!95 &1615393726
 Animator:
   serializedVersion: 7
@@ -7271,6 +7275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1813eeaa96703c418ef94e91b16ef92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Finish
+  winDistance: 1
 --- !u!212 &1641420951
 SpriteRenderer:
   serializedVersion: 2
