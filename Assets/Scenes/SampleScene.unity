@@ -714,7 +714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Turret3
   target: {fileID: 1615393728}
-  detectGunRange: 3
+  detectGunRange: 4
   rotateSpeed: 100
   gunPrefab: {fileID: 2375526350010424805, guid: c1ed9e117fbaf7d45b2545e19fc024ed, type: 3}
   gunPoint: {fileID: 696123316}
@@ -905,7 +905,7 @@ MonoBehaviour:
   detectSnipeRange: 10
   snipePrefab: {fileID: 2418609798960700967, guid: 9492a9cf6817cdb42bfdad521f00b86a, type: 3}
   snipePoint: {fileID: 775710332}
-  snipeSpeed: 10
+  snipeSpeed: 8
   snipeRate: 1
 --- !u!1 &863959775
 GameObject:
@@ -6828,12 +6828,14 @@ MonoBehaviour:
   target: {fileID: 1615393728}
   detectRange: 5
   rotateSpeed: 40
-  firePrefab: {fileID: 4880225851892834454, guid: a3f720bcf9fedb74ca91b86b792ef1c4, type: 3}
+  firePrefab: {fileID: 2330005139695723244, guid: 299830dc3ddddf046b007d3292a67097, type: 3}
   firePoint: {fileID: 993488255}
-  fireSpeed: 2
+  fireSpeed: 3
   fireRate: 1
   numberFire: 3
   spreadAngle: 45
+  coneAngle: 45
+  coneColor: {r: 1, g: 0, b: 0, a: 0.78431374}
 --- !u!1 &1029520603
 GameObject:
   m_ObjectHideFlags: 0

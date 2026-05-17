@@ -1,26 +1,26 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Turret2 : MonoBehaviour
 {
     public Transform target;
+
     public float detectSnipeRange = 5f;
+
     public GameObject snipePrefab;
     public Transform snipePoint;
+
     public float snipeSpeed = 8f;
     public float snipeRate = 1f;
+
     private float nextFireTime;
-
-
-    void Start()
-    {
-    }
 
     void Update()
     {
-       Vector2 directionToTarget =
-        (target.position - transform.position).normalized;
+        if (target == null)
+            return;
+
+        Vector2 directionToTarget =
+            (target.position - transform.position).normalized;
 
         Vector2 forward = transform.right;
 
@@ -36,26 +36,25 @@ public class Turret2 : MonoBehaviour
                 Shoot();
                 nextFireTime = Time.time + snipeRate;
             }
-        
         }
     }
 
-     void Shoot()
+    void Shoot()
     {
-        Vector2 direction = (target.position - snipePoint.position).normalized;
+        Vector2 direction =
+            (target.position - snipePoint.position).normalized;
 
-        
         GameObject bullet = Instantiate(
-                snipePrefab,
-                snipePoint.position,
-                Quaternion.identity
+            snipePrefab,
+            snipePoint.position,
+            Quaternion.identity
         );
 
         Bullet bulletScript = bullet.GetComponent<Bullet>();
 
-        bulletScript.SetDirection(direction, snipeSpeed);
-        
+        if (bulletScript != null)
+        {
+            bulletScript.SetDirection(direction, snipeSpeed);
+        }
     }
-
-
 }

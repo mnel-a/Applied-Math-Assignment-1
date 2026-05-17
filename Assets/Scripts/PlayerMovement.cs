@@ -1,17 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     public Animator anim;
     public float moveSpeed = 5f;
-    private float x;
-    private float y;
+    public GameObject loseUI;
+    public GameObject winUI;
     private Vector2 input;
     private bool moving;
-    public GameObject Lose;
-    public GameObject Win;
 
     void Update()
     {
@@ -22,50 +18,39 @@ public class PlayerMovement : MonoBehaviour
 
     void GetInput()
     {
-        x = Input.GetAxisRaw("Horizontal");
-        y = Input.GetAxisRaw("Vertical");
-
-        input = new Vector2(x, y);
+        input.x = Input.GetAxisRaw("Horizontal");
+        input.y = Input.GetAxisRaw("Vertical");
 
         input.Normalize();
     }
 
     void Move()
     {
-        transform.position += (Vector3)input * moveSpeed * Time.deltaTime;
+        transform.position += (Vector3)(input * moveSpeed * Time.deltaTime);
     }
 
     void Animate()
     {
-        if (input.magnitude > 0.1f)
-        {
-            moving = true;
-        }
-        else
-        {
-            moving = false;
-        }
+        moving = input.magnitude > 0.1f;
 
         if (moving)
         {
-            anim.SetFloat("X", x);
-            anim.SetFloat("Y", y);
+            anim.SetFloat("X", input.x);
+            anim.SetFloat("Y", input.y);
         }
 
         anim.SetBool("Moving", moving);
     }
 
     public void LoseGame()
-        {
-        Lose.SetActive(true);
-
+    {
+        loseUI.SetActive(true);
         Time.timeScale = 0f;
-        }
+    }
 
     public void WinGame()
     {
-        Win.SetActive(true);
-
+        winUI.SetActive(true);
         Time.timeScale = 0f;
     }
 }

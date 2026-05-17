@@ -3,33 +3,31 @@ using UnityEngine.SceneManagement;
 
 public class Finish : MonoBehaviour
 {
-    PlayerMovement player;
+    private PlayerMovement player;
+    public float winDistance = 1f;
 
     void Start()
     {
         player = FindAnyObjectByType<PlayerMovement>();
     }
-   void Update()
+
+    void Update()
     {
-        if (player == null) return;
+        if (player == null)
+            return;
 
-        float distance = Vector3.Distance(
-            transform.position,
-            player.transform.position
-        );
+        float distance = Vector2.Distance(transform.position, player.transform.position);
 
-        if (distance < 1f)
+        if (distance <= winDistance)
         {
             player.WinGame();
             RestartGame();
         }
     }
 
-      void RestartGame()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().buildIndex
-        );
+    void RestartGame() 
+    { 
+        Time.timeScale = 1f; 
+        SceneManager.LoadScene( SceneManager.GetActiveScene().buildIndex ); 
     }
 }

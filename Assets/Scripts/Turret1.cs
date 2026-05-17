@@ -1,5 +1,3 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Turret1 : MonoBehaviour
@@ -7,90 +5,89 @@ public class Turret1 : MonoBehaviour
     public Transform target;
     public float detectRange = 5f;
     public float rotateSpeed = 40f;
-
     public GameObject firePrefab;
     public Transform firePoint;
     public float fireSpeed = 8f;
     public float fireRate = 1f;
-
     public int numberFire = 5;
     public float spreadAngle = 45f;
+    public float coneAngle = 45f;
+    public Color coneColor = Color.red;
+
     private float nextFireTime;
-
-
-    void Start()
-    {
-    }
 
     void Update()
     {
         if (target == null)
-        {
             return;
-        }
 
-        float distance = Vector3.Distance(transform.position, target.position);
+        Vector2 directionToTarget =
+            (target.position - transform.position).normalized;
 
+        Vector2 forward = transform.right;
 
-        if(distance <= detectRange)
+        float distance =
+            Vector2.Distance(transform.position, target.position);
+
+        float angle =
+            Vector2.Angle(forward, directionToTarget);
+
+        if (angle <= coneAngle * 0.5f && distance <= detectRange)
         {
-            RotateToTarget();
-
-             if (Time.time >= nextFireTime)
+            if (Time.time >= nextFireTime)
             {
                 Shoot();
                 nextFireTime = Time.time + fireRate;
             }
         }
-    
     }
 
-     void RotateToTarget()
-     
-     {
-        var direction = target.position - transform.position;
-        var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
-     }
-
-     void Shoot()
+    void Shoot()
     {
-        Vector2 direction = (target.position - firePoint.position).normalized;
+        Vector2 direction =
+            (target.position - firePoint.position).normalized;
 
-        float angleStep = spreadAngle / (numberFire - 1);
+        float angleStep =
+            numberFire > 1 ? spreadAngle / (numberFire - 1) : 0f;
 
-        float angle = -spreadAngle / 2;
+        float currentAngle = -spreadAngle * 0.5f;
 
         for (int i = 0; i < numberFire; i++)
         {
-            float bulletDirX =
-                direction.x * Mathf.Cos(angle * Mathf.Deg2Rad) -
-                direction.y * Mathf.Sin(angle * Mathf.Deg2Rad);
+            float radians = currentAngle * Mathf.Deg2Rad;
 
-            float bulletDirY =
-                direction.x * Mathf.Sin(angle * Mathf.Deg2Rad) +
-                direction.y * Mathf.Cos(angle * Mathf.Deg2Rad);
+            float bulletDirX = direction.x * Mathf.Cos(radians) - direction.y * Mathf.Sin(radians);
 
-            Vector2 bulletDirection =
-                new Vector2(bulletDirX, bulletDirY).normalized;
+            float bulletDirY = direction.x * Mathf.Sin(radians) + direction.y * Mathf.Cos(radians);
 
-            // Spawn bullet
-            GameObject bullet = Instantiate(
-                firePrefab,
-                firePoint.position,
-                Quaternion.identity
-            );
+            Vector2 bulletDirection = new Vector2(bulletDirX, bulletDirY).normalized;
 
-            // Send direction to bullet
+            GameObject bullet = Instantiate(firePrefab, firePoint.position, Quaternion.identity);
+
             Bullet bulletScript = bullet.GetComponent<Bullet>();
 
-            bulletScript.SetDirection(bulletDirection, fireSpeed);
+            if (bulletScript != null)
+            {
+                bulletScript.SetDirection(bulletDirection, fireSpeed);
+            }
 
-            angle += angleStep;
+            currentAngle += angleStep;
         }
     }
 
+    void OnDrawGizmos()
+    {
+        Gizmos.color = coneColor;
 
+        Vector3 origin = transform.position;
+        Vector3 forward = transform.right;
+
+        Vector3 leftDirection = Quaternion.Euler(0, 0, -coneAngle * 0.5f) * forward;
+
+        Vector3 rightDirection = Quaternion.Euler(0, 0, coneAngle * 0.5f) * forward;
+
+        Gizmos.DrawLine(origin, origin + leftDirection * detectRange);
+        Gizmos.DrawLine(origin, origin + rightDirection * detectRange);
+    }
 }

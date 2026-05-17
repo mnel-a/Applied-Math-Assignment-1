@@ -1,5 +1,4 @@
-using System;
-using Unity.VisualScripting;
+using System.Collections;
 using UnityEngine;
 
 public class Turret3 : MonoBehaviour
@@ -11,81 +10,85 @@ public class Turret3 : MonoBehaviour
     public Transform gunPoint;
     public float gunSpeed = 8f;
     public float gunRate = 1f;
-    private float nextFireTime;
+    public int numberGun = 5;
+    public float spreadAngle = 30f;
     public GameObject flashPrefab;
     public float flashDuration = 0.3f;
     public float shootDelay = 0.1f;
-
-
-    void Start()
-    {
-    }
+    private float nextFireTime;
 
     void Update()
     {
         if (target == null)
-        {
             return;
-        }
 
-        float distance = Vector3.Distance(transform.position, target.position);
+        float distance = Vector2.Distance(transform.position, target.position);
 
-
-        if(distance <= detectGunRange)
+        if (distance <= detectGunRange)
         {
             RotateToTarget();
 
-             if (Time.time >= nextFireTime)
+            if (Time.time >= nextFireTime)
             {
-                Shoot();
+                StartCoroutine(ShootRoutine());
                 nextFireTime = Time.time + gunRate;
             }
         }
-    
     }
 
     void RotateToTarget()
-     
     {
-        var direction = target.position - transform.position;
-        var angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Vector2 direction = target.position - transform.position;
+
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
         Quaternion targetRotation = Quaternion.Euler(0, 0, angle);
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
     }
-    void Shoot()
+IEnumerator ShootRoutine()
+{
+    if (flashPrefab != null)
     {
-        StartCoroutine(ShootRoutine());
+        GameObject flash = Instantiate(
+            flashPrefab,
+            gunPoint.position,
+            transform.rotation
+        );
+
+        Destroy(flash, flashDuration);
     }
-
-    System.Collections.IEnumerator ShootRoutine()
-    {
-
-    GameObject flash = Instantiate(
-        flashPrefab,
-        gunPoint.position,
-        transform.rotation
-    );
-
-    Destroy(flash, flashDuration);
 
     yield return new WaitForSeconds(shootDelay);
 
-  
     Vector2 direction =
         (target.position - gunPoint.position).normalized;
 
-    GameObject bullet = Instantiate(
-        gunPrefab,
-        gunPoint.position,
-        Quaternion.identity
-    );
+    float angleStep =
+        numberGun > 1 ? spreadAngle / (numberGun - 1) : 0f;
 
-    Bullet bulletScript = bullet.GetComponent<Bullet>();
+    float currentAngle = -spreadAngle * 0.5f;
 
-    bulletScript.SetDirection(direction, gunSpeed);
+    for (int i = 0; i < numberGun; i++)
+    {
+        float radians = currentAngle * Mathf.Deg2Rad;
+
+        float bulletDirX = direction.x * Mathf.Cos(radians) - direction.y * Mathf.Sin(radians);
+
+        float bulletDirY = direction.x * Mathf.Sin(radians) + direction.y * Mathf.Cos(radians);
+
+        Vector2 bulletDirection = new Vector2(bulletDirX, bulletDirY).normalized;
+
+        GameObject bullet = Instantiate(gunPrefab, gunPoint.position, Quaternion.identity);
+
+        Bullet bulletScript = bullet.GetComponent<Bullet>();
+
+        if (bulletScript != null)
+        {
+            bulletScript.SetDirection(bulletDirection, gunSpeed);
+        }
+
+        currentAngle += angleStep;
     }
-
-
 }
-
+}

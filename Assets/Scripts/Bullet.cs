@@ -3,13 +3,12 @@ using UnityEngine.SceneManagement;
 
 public class Bullet : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private Vector2 moveDirection;
-    private float moveSpeed;
     public float lifeTime = 5f;
     public float hitDistance = 0.5f;
+    private Vector2 moveDirection;
+    private float moveSpeed;
     private Transform player;
-
+    private PlayerMovement playerMovement;
     public void SetDirection(Vector2 direction, float speed)
     {
         moveDirection = direction;
@@ -23,45 +22,32 @@ public class Bullet : MonoBehaviour
         if (playerObject != null)
         {
             player = playerObject.transform;
-        }
-        else
-        {
-            Debug.LogError("No GameObject with tag 'Player' found!");
+            playerMovement = playerObject.GetComponent<PlayerMovement>();
         }
 
         Destroy(gameObject, lifeTime);
-
     }
 
     void Update()
     {
-        transform.position +=
-            (Vector3)(moveDirection * moveSpeed * Time.deltaTime);
+        transform.position += (Vector3)(moveDirection * moveSpeed * Time.deltaTime);
 
-        if (player != null)
+        if (player == null || playerMovement == null)
+            return;
+
+        float distance = Vector2.Distance(transform.position, player.position);
+
+        if (distance <= hitDistance)
         {
-            float distance =
-                Vector2.Distance(transform.position, player.position);
-
-            PlayerMovement playerMovement =
-                FindAnyObjectByType<PlayerMovement>();
-
-            if (distance <= hitDistance)
-            {
-                playerMovement.LoseGame();
-                RestartGame();
-            }
+            playerMovement.LoseGame();
+            Destroy(gameObject);
+            RestartGame();
         }
-
     }
 
-    void RestartGame()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().buildIndex
-        );
+      void RestartGame() 
+    { 
+        Time.timeScale = 1f; 
+        SceneManager.LoadScene( SceneManager.GetActiveScene().buildIndex ); 
     }
-
-    
 }
